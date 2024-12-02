@@ -116,7 +116,7 @@ class ProveedoresView(Frame):
         """Función para buscar un proveedor basado en el texto del buscador (solo por Nombre e ID)"""
         search_text = self.search_entry.get().lower()
 
-        # Limpiar la vista de la tabla antes de insertar los resultados
+       
         for row in self.treeview.get_children():
             self.treeview.delete(row)
 
@@ -127,11 +127,11 @@ class ProveedoresView(Frame):
         proveedores = db.fetch_proveedores()
         db.close()
 
-        # Insertar en el Treeview solo si el texto de búsqueda se encuentra en el ID o en el Nombre
+        
         for proveedor in proveedores:
-         # Asumimos que 'proveedor[0]' es el ID y 'proveedor[1]' es el Nombre
-         if (search_text in str(proveedor[0]).lower() or  # Buscar por ID
-            search_text in proveedor[1].lower()):  # Buscar por Nombre
+        
+         if (search_text in str(proveedor[0]).lower() or  
+            search_text in proveedor[1].lower()):  
             self.treeview.insert("", "end", values=proveedor)
 
 

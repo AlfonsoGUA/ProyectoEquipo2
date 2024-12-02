@@ -7,7 +7,7 @@ class UsuariosView(Frame):
         super().__init__(parent)
         
         self.configure(bg="white")
-        self.grid(row=0, column=0, sticky="nsew")  # El contenedor ocupa todo el espacio disponible
+        self.grid(row=0, column=0, sticky="nsew")   
         
         tk.Label(self, text="Gestión de Usuarios", font=("Arial", 16, "bold"), bg="white", fg="darkblue", anchor="center").grid(row=0, column=0, columnspan=4, pady=10, sticky="w")
         
@@ -34,7 +34,7 @@ class UsuariosView(Frame):
 
         style.configure("Treeview", highlightthickness=1, bd=1, relief="solid")
         
-        # Canvas que contendrá el Treeview
+       
         self.canvas = tk.Canvas(self, bg="white")
         self.canvas.grid(row=2, column=0, columnspan=4, padx=10, pady=10, sticky="nsew")
         
@@ -55,7 +55,7 @@ class UsuariosView(Frame):
         self.treeview.heading("Contraseña", text="Contraseña")
         self.treeview.heading("Rol", text="Rol")
         
-        # Ajustar el tamaño de las columnas a un peso relativo
+       
         self.treeview.column("Id", width=50, anchor="center", stretch=tk.NO)
         self.treeview.column("Nombre", width=150, anchor="center", stretch=tk.YES)
         self.treeview.column("Correo", width=200, anchor="center", stretch=tk.YES)
@@ -74,9 +74,9 @@ class UsuariosView(Frame):
         tk.Button(self, text="Modificar", bg="yellow", command=self.modify_user, **button_style).grid(row=4, column=1, padx=10, pady=10, sticky="ew")
         tk.Button(self, text="Eliminar", bg="red", fg="white", command=self.delete_user, **button_style).grid(row=4, column=2, padx=10, pady=10, sticky="ew")
         
-        # Configurar el comportamiento de expansión de las filas y columnas
-        self.grid_rowconfigure(2, weight=1)  # El Treeview se expandirá
-        self.grid_columnconfigure(0, weight=1)  # Las columnas se expandirán
+        
+        self.grid_rowconfigure(2, weight=1)  
+        self.grid_columnconfigure(0, weight=1)  
         self.grid_columnconfigure(1, weight=1)
         self.grid_columnconfigure(2, weight=1)
         self.grid_columnconfigure(3, weight=1)

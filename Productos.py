@@ -119,7 +119,6 @@ class ProductosView(Frame):
         """Función para buscar un producto basado en el texto del buscador (solo por Id y Nombre)"""
         search_text = self.search_entry.get().lower()
 
-        # Limpiar la vista de la tabla antes de insertar los resultados
         for row in self.treeview.get_children():
             self.treeview.delete(row)
 
@@ -130,11 +129,9 @@ class ProductosView(Frame):
         productos = db.fetch_productos()
         db.close()
 
-        # Insertar en el Treeview solo si el texto de búsqueda se encuentra en el ID o en el Nombre
         for producto in productos:
-            # Asumimos que 'producto[0]' es el ID y 'producto[1]' es el Nombre
-            if (search_text in str(producto[0]).lower() or  # Buscar por ID
-                search_text in producto[1].lower()):  # Buscar por Nombre
+            if (search_text in str(producto[0]).lower() or  
+                search_text in producto[1].lower()):  
                 self.treeview.insert("", "end", values=producto)
 
 
