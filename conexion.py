@@ -37,7 +37,7 @@ class DBConnection:
         Obtiene todos los proveedores de la tabla Proveedores.
         """
         cursor = self.conn.cursor()
-        cursor.execute("SELECT Id_Proveedor, Nombre, Contacto FROM Proveedores")
+        cursor.execute("SELECT * FROM Proveedores")
         results = cursor.fetchall()
         cursor.close()
         return results
