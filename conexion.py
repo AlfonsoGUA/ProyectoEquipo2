@@ -16,11 +16,12 @@ class DBConnection:
     def fetch_productos(self):
         """Obtener productos desde la base de datos"""
         cursor = self.conn.cursor()
-        query = "SELECT Nombre, Precio, Id_Proveedor FROM Productos LIMIT 6"
+        query = "SELECT * FROM Productos"
         cursor.execute(query)
         rows = cursor.fetchall()
         cursor.close()
         return rows
+
 
     def fetch_usuarios(self):
         """Obtener usuarios desde la base de datos"""
@@ -30,6 +31,16 @@ class DBConnection:
         rows = cursor.fetchall()
         cursor.close()
         return rows
+    
+    def fetch_proveedores(self):
+        """
+        Obtiene todos los proveedores de la tabla Proveedores.
+        """
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT Id_Proveedor, Nombre, Contacto FROM Proveedores")
+        results = cursor.fetchall()
+        cursor.close()
+        return results
 
     def close(self):
         """Cerrar la conexión"""

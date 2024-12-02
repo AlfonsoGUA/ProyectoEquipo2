@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
-from Usuarios import UsuariosView  
+from Usuarios import UsuariosView 
+from Proveedores import ProveedoresView 
+from Productos import ProductosView
 
 class TiendaMenu(tk.Tk):
     def __init__(self):
@@ -55,10 +57,25 @@ class TiendaMenu(tk.Tk):
         usuarios_view.grid(row=0, column=0, sticky="nsew") 
     
     def show_productos(self):
-        self.update_main_area("Gestión de Productos")
+        """
+        Muestra la vista de gestión de productos en el área principal.
+        """
+        for widget in self.main_area.winfo_children():
+            widget.destroy()  
+    
+        productos_view = ProductosView(self.main_area)  
+        productos_view.grid(row=0, column=0, sticky="nsew")  
     
     def show_proveedores(self):
-        self.update_main_area("Gestión de Proveedores")
+        """
+        Muestra la vista de gestión de proveedores en el área principal.
+        """
+        for widget in self.main_area.winfo_children():
+            widget.destroy()  
+    
+        proveedores_view = ProveedoresView(self.main_area)  
+        proveedores_view.grid(row=0, column=0, sticky="nsew")  
+
     
     def show_tienda(self):
         self.update_main_area("Gestión de Tienda")
