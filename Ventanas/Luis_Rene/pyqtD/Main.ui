@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Main</class>
+ <widget class="QMainWindow" name="Main">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>391</width>
+    <height>376</height>
+   </rect>
+  </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QFrame" name="MainFrame">
+    <property name="geometry">
+     <rect>
+      <x>-10</x>
+      <y>-10</y>
+      <width>400</width>
+      <height>350</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="LabelUsuario">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>100</y>
+       <width>71</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Usuario: </string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="BottonLogin">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>220</y>
+       <width>151</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Ingresar</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="TextUsuario">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>100</y>
+       <width>170</width>
+       <height>40</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="TextPass">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>150</y>
+       <width>170</width>
+       <height>40</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="Labelpass">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>150</y>
+       <width>71</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Contraseña:</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

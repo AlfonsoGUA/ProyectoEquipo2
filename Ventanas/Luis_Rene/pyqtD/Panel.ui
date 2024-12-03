@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1088</width>
+    <height>595</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="FramePrincipal">
+   <widget class="QFrame" name="FrameUsuario">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>241</width>
+      <height>601</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="Usuario">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>40</y>
+       <width>121</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;User&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="CerrarSesion">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>80</y>
+       <width>131</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Cerrar Sesion</string>
+     </property>
+    </widget>
+    <widget class="QFrame" name="FrameAccion">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>150</y>
+       <width>241</width>
+       <height>421</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QPushButton" name="Usuarios">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>241</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Usuarios</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="Proveedores">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>80</y>
+        <width>241</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Proveedores</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="Productos">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>160</y>
+        <width>241</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Productos</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="Carrito">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>350</y>
+        <width>241</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Carrito</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="frame">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>0</y>
+      <width>841</width>
+      <height>601</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
