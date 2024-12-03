@@ -1,4 +1,4 @@
-from qtpy.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QFrame, QStackedWidget
+from qtpy.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QFrame, QStackedWidget
 from qtpy.QtCore import Qt
 
 from Usuarios import UsuariosView
@@ -6,11 +6,12 @@ from Proveedores import ProveedoresView
 from Productos import ProductosView
 
 class TiendaMenu(QMainWindow):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, login_window, parent=None):
+        super().__init__(parent)
+        self.login_window = login_window  # Guardar referencia de la ventana de inicio de sesión
 
         self.setWindowTitle("Menú Principal")
-        self.setGeometry(100, 100, 900, 600)  
+        self.setGeometry(100, 100, 900, 600)
         self.setStyleSheet("""
             background-color: #ecf0f1;
             font-family: 'Arial', sans-serif;
@@ -21,12 +22,13 @@ class TiendaMenu(QMainWindow):
 
         main_layout = QHBoxLayout(central_widget)
 
+        # Menú lateral
         side_menu = QFrame(self)
         side_menu.setStyleSheet("background-color: #34495e; border-right: 2px solid #bdc3c7;")
         side_menu.setFixedWidth(250)
 
         side_menu_layout = QVBoxLayout(side_menu)
-        side_menu_layout.setSpacing(20)  
+        side_menu_layout.setSpacing(20)
 
         user_label = QLabel("Menú de Navegación", side_menu)
         user_label.setStyleSheet("color: white; font: bold 16pt Arial; margin-top: 20px;")
@@ -82,34 +84,26 @@ class TiendaMenu(QMainWindow):
         self.main_area_content = QLabel("Bienvenidos a la ferretería del Equipo 2", self)
         self.main_area_content.setStyleSheet("font: bold 18pt Arial; color: #2c3e50; text-align: center;")
         self.main_area.addWidget(self.main_area_content)
+            
 
     def show_usuarios(self):
-        """
-        Muestra la vista de gestión de usuarios en el área principal.
-        """
         self._clear_main_area()
         usuarios_view = UsuariosView()
         self.main_area.addWidget(usuarios_view)
 
     def show_productos(self):
-        """
-        Muestra la vista de gestión de productos en el área principal.
-        """
         self._clear_main_area()
         productos_view = ProductosView()
         self.main_area.addWidget(productos_view)
 
     def show_proveedores(self):
-        """
-        Muestra la vista de gestión de proveedores en el área principal.
-        """
         self._clear_main_area()
         proveedores_view = ProveedoresView()
         self.main_area.addWidget(proveedores_view)
 
     def show_tienda(self):
         self.update_main_area("Gestión de Tienda")
-    
+
     def _clear_main_area(self):
         for i in range(self.main_area.count()):
             widget = self.main_area.widget(i)
@@ -124,12 +118,8 @@ class TiendaMenu(QMainWindow):
             text-align: center;
         """)
         self.main_area.addWidget(label)
-    
-    def logout(self):
-        self.update_main_area("Cerrando sesión...")
 
-if __name__ == "__main__":
-    app = QApplication([])
-    window = TiendaMenu()
-    window.show()
-    app.exec_()
+    def logout(self):
+        """Cerrar sesión y volver a la ventana de inicio de sesión."""
+        self.close()  # Cerrar la ventana actual
+        self.login_window.show()  # Mostrar la ventana de inicio de sesión
