@@ -14,25 +14,25 @@ class Ui_MainWindow:
                 background-color: #FFFFFF;
             }
             QLabel {
-                color: #005c99;
+                color:  #34495e;
                 font-size: 14px;
             }
             QPushButton {
-                background-color: #005c99;
+                background-color: #34495e;
                 color: white;
                 border-radius: 5px;
                 padding: 10px;
                 font-size: 12px;
             }
             QPushButton:hover {
-                background-color: #003f73;
+                background-color:  #e74c3c;
             }
             QLineEdit {
-                border: 1px solid #005c99;
+                border: 1px solid  #34495e;
                 padding: 5px;
             }
             QLineEdit:focus {
-                border-color: #003f73;
+                border-color:  #e74c3c;
             }
         """)
 
@@ -88,17 +88,22 @@ class Ui_MainWindow:
         user = self.db.log(correo, contrasena)
         if user:
             QtWidgets.QMessageBox.information(None, "Éxito", f"Bienvenido, {user[1]}!")  # Muestra el nombre del usuario.
-            self.open_menu_window()  # Abrir la ventana del menú principal.
+            self.clear_fields()
+            self.open_menu_window(correo)  # Abrir la ventana del menú principal.
         else:
             QtWidgets.QMessageBox.critical(None, "Error", "Correo o contraseña incorrectos.")
 
 
-    def open_menu_window(self):
+    def open_menu_window(self,correo):
         """Abrir la ventana del menú principal."""
         from MenuA import TiendaMenu  # Importar correctamente TiendaMenu
-        self.menu_window = TiendaMenu(MainWindow)  # Pasar la ventana de inicio de sesión
+        self.menu_window = TiendaMenu(correo,MainWindow)  # Pasar la ventana de inicio de sesión
         self.menu_window.show()  # Mostrar la ventana del menú
         MainWindow.hide()  # Ocultar la ventana de inicio de sesión
+    def clear_fields(self):
+            """Limpiar los campos de texto de la ventana principal."""
+            self.TextUsuario.clear()
+            self.TextPass.clear()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

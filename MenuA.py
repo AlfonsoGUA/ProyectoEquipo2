@@ -6,10 +6,11 @@ from Proveedores import ProveedoresView
 from Productos import ProductosView
 
 class TiendaMenu(QMainWindow):
-    def __init__(self, login_window, parent=None):
+    def __init__(self, usuario,login_window, parent=None):
         super().__init__(parent)
         self.login_window = login_window  # Guardar referencia de la ventana de inicio de sesión
-
+        self.usuario=usuario
+        print(self.usuario)
         self.setWindowTitle("Menú Principal")
         self.setGeometry(100, 100, 900, 600)
         self.setStyleSheet("""
@@ -30,7 +31,7 @@ class TiendaMenu(QMainWindow):
         side_menu_layout = QVBoxLayout(side_menu)
         side_menu_layout.setSpacing(20)
 
-        user_label = QLabel("Menú de Navegación", side_menu)
+        user_label = QLabel(self.usuario, side_menu)
         user_label.setStyleSheet("color: white; font: bold 16pt Arial; margin-top: 20px;")
         side_menu_layout.addWidget(user_label)
 
