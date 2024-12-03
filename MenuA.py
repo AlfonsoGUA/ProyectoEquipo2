@@ -1,16 +1,27 @@
 from qtpy.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QFrame, QStackedWidget
 from qtpy.QtCore import Qt
-
+from conexion import DBConnection  
 from Usuarios import UsuariosView
 from Proveedores import ProveedoresView
 from Productos import ProductosView
 
 class TiendaMenu(QMainWindow):
-    def __init__(self, usuario,login_window, parent=None):
+    def __init__(self, usuario, login_window, parent=None):
         super().__init__(parent)
-        self.login_window = login_window  # Guardar referencia de la ventana de inicio de sesión
-        self.usuario=usuario
-        print(self.usuario)
+        self.login_window = login_window  
+        self.usuario = usuario  
+
+        # Conexión a la base de datos
+        self.db = DBConnection()
+        self.db.connect()
+        
+        # Obtener el nombre del usuario y rol
+        self.nombre_usuario = self.db.get_user_name(self.usuario)
+        self.rol_usuario = self.get_user_role(self.usuario)  # Consulta adicional para obtener el rol
+        
+        if not self.nombre_usuario:
+            self.nombre_usuario = "Usuario desconocido" 
+
         self.setWindowTitle("Menú Principal")
         self.setGeometry(100, 100, 900, 600)
         self.setStyleSheet("""
@@ -31,10 +42,13 @@ class TiendaMenu(QMainWindow):
         side_menu_layout = QVBoxLayout(side_menu)
         side_menu_layout.setSpacing(20)
 
-        user_label = QLabel(self.usuario, side_menu)
+        # Mostrar el nombre del usuario
+        user_label = QLabel(self.nombre_usuario, side_menu)
         user_label.setStyleSheet("color: white; font: bold 16pt Arial; margin-top: 20px;")
+        user_label.setAlignment(Qt.AlignCenter)
         side_menu_layout.addWidget(user_label)
 
+        # Botón de cerrar sesión
         logout_button = QPushButton("Cerrar sesión", side_menu)
         logout_button.setStyleSheet("""
             background-color: #e74c3c; 
@@ -46,13 +60,32 @@ class TiendaMenu(QMainWindow):
         logout_button.clicked.connect(self.logout)
         side_menu_layout.addWidget(logout_button)
 
-        menu_buttons = [
-            ("Usuarios", self.show_usuarios),
-            ("Productos", self.show_productos),
-            ("Proveedores", self.show_proveedores),
-            ("Tienda", self.show_tienda)
+        # Botones del menú según el rol
+        if self.rol_usuario == "admin":
+            admin_buttons = [
+                ("Usuarios", self.show_usuarios),
+                ("Productos", self.show_productos),
+                ("Proveedores", self.show_proveedores),
+            ]
+            for text, command in admin_buttons:
+                btn = QPushButton(text, side_menu)
+                btn.setStyleSheet("""
+                    background-color: #2c3e50; 
+                    color: white; 
+                    font: 12pt Arial; 
+                    padding: 12px;
+                    border-radius: 5px;
+                    margin-top: 10px;
+                """)
+                btn.clicked.connect(command)
+                side_menu_layout.addWidget(btn)
+
+        # Botón siempre visible: "Tienda" y "Carrito"
+        general_buttons = [
+            ("Tienda", self.show_tienda),
+            ("Carrito", self.show_carrito),
         ]
-        for text, command in menu_buttons:
+        for text, command in general_buttons:
             btn = QPushButton(text, side_menu)
             btn.setStyleSheet("""
                 background-color: #2c3e50; 
@@ -65,17 +98,7 @@ class TiendaMenu(QMainWindow):
             btn.clicked.connect(command)
             side_menu_layout.addWidget(btn)
 
-        cart_button = QPushButton("Carrito", side_menu)
-        cart_button.setStyleSheet("""
-            background-color: #f1c40f; 
-            color: white; 
-            font: bold 14pt Arial; 
-            border-radius: 5px;
-            padding: 10px;
-            margin-top: 20px;
-        """)
-        side_menu_layout.addWidget(cart_button)
-
+        # Área principal
         self.main_area = QStackedWidget(self)
         self.main_area.setStyleSheet("background-color: #ffffff; border-radius: 10px; padding: 20px;")
 
@@ -85,7 +108,15 @@ class TiendaMenu(QMainWindow):
         self.main_area_content = QLabel("Bienvenidos a la ferretería del Equipo 2", self)
         self.main_area_content.setStyleSheet("font: bold 18pt Arial; color: #2c3e50; text-align: center;")
         self.main_area.addWidget(self.main_area_content)
-            
+
+    def get_user_role(self, email):
+        """Consulta el rol del usuario basado en su correo."""
+        cursor = self.db.conn.cursor()
+        query = "SELECT rol FROM usuarios WHERE correo = %s"
+        cursor.execute(query, (email,))
+        result = cursor.fetchone()
+        cursor.close()
+        return result[0] if result else "usuario"  # Retorna 'usuario' por defecto si no se encuentra el rol
 
     def show_usuarios(self):
         self._clear_main_area()
@@ -104,6 +135,9 @@ class TiendaMenu(QMainWindow):
 
     def show_tienda(self):
         self.update_main_area("Gestión de Tienda")
+    
+    def show_carrito(self):
+        self.update_main_area("Carrito de Compras")
 
     def _clear_main_area(self):
         for i in range(self.main_area.count()):

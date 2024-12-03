@@ -12,6 +12,15 @@ class DBConnection:
             password='',  
             database="tienda"        
         )
+        
+    def get_user_name(self, email):
+        """Consulta el nombre del usuario basado en el correo"""
+        cursor = self.conn.cursor()  # Crear un cursor
+        query = "SELECT nombre FROM usuarios WHERE correo = %s"
+        cursor.execute(query, (email,))
+        result = cursor.fetchone()  # Devuelve una tupla con el nombre, o None si no existe
+        cursor.close()  # Cerrar el cursor después de usarlo
+        return result[0] if result else None
 
     def fetch_productos(self):
         """Obtener productos desde la base de datos"""
@@ -51,7 +60,6 @@ class DBConnection:
         user = cursor.fetchone()
         cursor.close()
         return user  # Retorna None si no se encuentra el usuario, o los datos del usuario si existe.
-
 
     def close(self):
         """Cerrar la conexión"""
