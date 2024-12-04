@@ -84,7 +84,6 @@ class TiendaMenu(QMainWindow):
         # Botón siempre visible: "Tienda" y "Carrito"
         general_buttons = [
             ("Tienda", self.show_tienda),
-            ("Carrito", self.show_carrito),
         ]
         for text, command in general_buttons:
             btn = QPushButton(text, side_menu)
@@ -139,9 +138,7 @@ class TiendaMenu(QMainWindow):
         tienda_view = TiendaView()
         self.main_area.addWidget(tienda_view)
     
-    def show_carrito(self):
-        self.update_main_area("Carrito de Compras")
-
+    
     def _clear_main_area(self):
         for i in range(self.main_area.count()):
             widget = self.main_area.widget(i)

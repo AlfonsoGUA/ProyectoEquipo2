@@ -473,6 +473,7 @@ class CarritoWindow(QDialog):
                 widget.deleteLater()
 
         # Agregar cada producto del carrito a la vista
+        self.product_widgets = []  # Almacenaremos los widgets de los productos
         for product in self.cart:
             product_layout = QHBoxLayout()
 
@@ -495,18 +496,31 @@ class CarritoWindow(QDialog):
             delete_button.clicked.connect(lambda _, p=product: self.eliminar_producto(p))
             product_layout.addWidget(delete_button)
 
+            # Agregar el layout del producto a la lista
             self.cart_list.addLayout(product_layout)
+
+            # Guardar el widget para eliminarlo más tarde
+            self.product_widgets.append((product, product_layout))
 
         # Actualiza el total
         self.total_label.setText(f"Total: $ {self.calcular_total():.2f}")
 
     def eliminar_producto(self, product):
         """Elimina un producto del carrito y actualiza la vista."""
-        # Elimina el producto del carrito utilizando la comparación de ID
+        # Elimina el producto de la lista interna
         self.cart = [p for p in self.cart if p['id'] != product['id']]
 
-        # Actualiza la vista
-        self.update_cart()
+        # Buscar y eliminar el widget correspondiente
+        for p, layout in self.product_widgets:
+            if p['id'] == product['id']:
+                for i in reversed(range(layout.count())):
+                    widget = layout.itemAt(i).widget()
+                    if widget:
+                        widget.deleteLater()
+                self.product_widgets.remove((p, layout))  # Elimina el widget de la lista
+
+        # Actualiza el total
+        self.total_label.setText(f"Total: $ {self.calcular_total():.2f}")
 
     def calcular_total(self):
         """Calcula el total de la compra."""
