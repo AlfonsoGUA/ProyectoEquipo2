@@ -83,21 +83,8 @@ class DBConnection:
         cursor.close()
         return user
 
-    class DBConnection:
-        def __init__(self):
-            self.conn = None
-
-    def connect(self):
-        """Conecta a la base de datos."""
-        self.conn = mysql.connector.connect(
-            host="localhost",       # Dirección del servidor de base de datos
-            user="root",            # Usuario de la base de datos
-            password='',            # Contraseña del usuario
-            database="tienda"       # Nombre de la base de datos
-        )
-
-  # Método para modificar un usuario
     def modificar_usuario(self, user_id, nombre, correo, contraseña, rol):
+        """Modifica un usuario existente."""
         try:
             cursor = self.conn.cursor()
             query = """
@@ -111,26 +98,63 @@ class DBConnection:
         except mysql.connector.Error as err:
             print(f"Detalles del error: {err}")  # Agregar detalles del error
             raise Exception(f"Error al modificar el usuario: {err}")
-    # Otros métodos que ya tenías...
 
-    def close(self):
-        """Cierra la conexión a la base de datos."""
-        if self.conn:
-            self.conn.close()
-
-
-
-    def delete_usuario(self, user_id):
-        """Elimina un usuario de la base de datos por su ID"""
+    def update_provider(self, provider_id, new_name, new_contact):
+        """Modifica un proveedor existente."""
         try:
+            query = """
+                UPDATE Proveedores
+                SET Nombre = %s, Contacto = %s
+                WHERE Id_Proveedor = %s
+            """
             cursor = self.conn.cursor()
-            query = "DELETE FROM Usuarios WHERE Id_Usuario = %s"  # Cambio de 'Id' a 'Id_Usuario'
-            cursor.execute(query, (user_id,))
+            cursor.execute(query, (new_name, new_contact, provider_id))
             self.conn.commit()
             cursor.close()
         except mysql.connector.Error as err:
             print(f"Detalles del error: {err}")
-            raise Exception(f"Error al eliminar el usuario: {err}")
+            raise Exception(f"Error al actualizar proveedor: {err}")
+
+    def delete_provider(self, provider_id):
+        """Elimina un proveedor de la base de datos dado su ID y sus productos asociados"""
+        try:
+            cursor = self.conn.cursor()
+
+            # Primero, elimina los productos que dependen del proveedor
+            delete_products_query = "DELETE FROM Productos WHERE Id_Proveedor = %s"
+            cursor.execute(delete_products_query, (provider_id,))
+
+            # Luego, elimina el proveedor
+            delete_provider_query = "DELETE FROM Proveedores WHERE Id_Proveedor = %s"
+            cursor.execute(delete_provider_query, (provider_id,))
+
+            self.conn.commit()
+        
+            if cursor.rowcount > 0:
+                print(f"Proveedor con ID {provider_id} y sus productos eliminados correctamente.")
+            else:
+                print(f"No se encontró el proveedor con ID {provider_id}.")
+        
+            cursor.close()
+        except mysql.connector.Error as err:
+            print(f"Error al eliminar proveedor: {err}")
+            self.conn.rollback()
+
+
+    def create_provider(self, name, contact):
+        """Inserta un nuevo proveedor en la base de datos."""
+        try:
+            cursor = self.conn.cursor()
+            query = """
+                INSERT INTO Proveedores (Nombre, Contacto)
+                VALUES (%s, %s)
+            """
+            cursor.execute(query, (name, contact))
+            self.conn.commit()
+            cursor.close()
+        except mysql.connector.Error as err:
+            print(f"Error al crear proveedor: {err}")
+            self.conn.rollback()
 
     def close(self):
         """Cierra la conexión a la base de datos."""
