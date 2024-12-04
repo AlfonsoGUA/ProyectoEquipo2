@@ -1,6 +1,8 @@
-from qtpy.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QLabel, QTableWidget, QTableWidgetItem
+from qtpy.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QLabel, QTableWidget, QTableWidgetItem, QMessageBox, QDialog
 from qtpy.QtCore import Qt
-from conexion import DBConnection  
+from conexion import DBConnection
+from Formularios import FormularioUsuario
+
 
 class UsuariosView(QWidget):
     def __init__(self):
@@ -13,12 +15,14 @@ class UsuariosView(QWidget):
 
         main_layout = QVBoxLayout(self)
         main_layout.setSpacing(20)
-        
+
+        # Título
         title_label = QLabel("Gestión de Usuarios")
         title_label.setStyleSheet("font: bold 16pt Arial; color: black;")
         title_label.setAlignment(Qt.AlignCenter)
         main_layout.addWidget(title_label)
 
+        # Buscador
         search_layout = QHBoxLayout()
         search_label = QLabel("Buscar Usuario:")
         search_label.setStyleSheet("font: 12pt Arial; color: black;")
@@ -47,6 +51,7 @@ class UsuariosView(QWidget):
 
         main_layout.addLayout(search_layout)
 
+        # Tabla de usuarios
         self.table = QTableWidget()
         self.table.setColumnCount(5)
         self.table.setHorizontalHeaderLabels(["Id", "Nombre", "Correo", "Contraseña", "Rol"])
@@ -67,16 +72,17 @@ class UsuariosView(QWidget):
             }
         """)
         self.table.setSelectionBehavior(QTableWidget.SelectRows)
-        self.table.horizontalHeader().setStretchLastSection(True)  
-        self.table.setColumnWidth(0, 50) 
-        self.table.setColumnWidth(1, 150)  
-        self.table.setColumnWidth(2, 200)  
-        self.table.setColumnWidth(3, 150)  
-        self.table.setColumnWidth(4, 100)  
+        self.table.horizontalHeader().setStretchLastSection(True)
+        self.table.setColumnWidth(0, 50)
+        self.table.setColumnWidth(1, 150)
+        self.table.setColumnWidth(2, 200)
+        self.table.setColumnWidth(3, 150)
+        self.table.setColumnWidth(4, 100)
         main_layout.addWidget(self.table)
 
+        # Botones
         button_layout = QHBoxLayout()
-        
+
         create_button = QPushButton("Crear")
         create_button.setStyleSheet("""
             background-color: #2ecc71;
@@ -120,13 +126,17 @@ class UsuariosView(QWidget):
         db.connect()
         usuarios = db.fetch_usuarios()
         db.close()
-        
+
+        self.update_table(usuarios)
+
+    def update_table(self, usuarios):
+        """Actualiza la tabla con los usuarios filtrados o cargados"""
         self.table.setRowCount(len(usuarios))
         for row_num, usuario in enumerate(usuarios):
             for col_num, value in enumerate(usuario):
                 item = QTableWidgetItem(str(value))
                 item.setTextAlignment(Qt.AlignCenter)
-                item.setForeground(Qt.black) 
+                item.setForeground(Qt.black)
                 self.table.setItem(row_num, col_num, item)
 
     def search_user(self):
@@ -136,33 +146,75 @@ class UsuariosView(QWidget):
         db.connect()
         usuarios = db.fetch_usuarios()
         db.close()
-        
+
         filtered_usuarios = [
             usuario for usuario in usuarios if search_text in str(usuario[0]).lower() or
                                                 search_text in usuario[1].lower() or
                                                 search_text in usuario[2].lower()
         ]
-        
+
         self.update_table(filtered_usuarios)
 
-    def update_table(self, usuarios):
-        """Actualiza la tabla con los usuarios filtrados o cargados"""
-        self.table.setRowCount(len(usuarios))
-        for row_num, usuario in enumerate(usuarios):
-            for col_num, value in enumerate(usuario):
-                item = QTableWidgetItem(str(value))
-                item.setTextAlignment(Qt.AlignCenter)
-                item.setForeground(Qt.black)  
-                self.table.setItem(row_num, col_num, item)
-
     def create_user(self):
-        """Placeholder para crear un usuario"""
-        print("Función de crear usuario no implementada.")
+        """Abre un formulario para crear un nuevo usuario"""
+        formulario = FormularioUsuario()
+        if formulario.exec_():  # Muestra el formulario como una ventana modal
+            QMessageBox.information(self, "Crear Usuario", "Usuario creado exitosamente.")
+            self.load_users()  # Recarga los usuarios para mostrar el nuevo
 
     def modify_user(self):
-        """Placeholder para modificar un usuario"""
-        print("Función de modificar usuario no implementada.")
+        """Modifica los datos del usuario seleccionado."""
+        selected_row = self.table.currentRow()
+        if selected_row < 0:
+            QMessageBox.warning(self, "Modificar Usuario", "Por favor, selecciona un usuario para modificar.")
+            return
+        
+        # Obtiene los datos del usuario seleccionado
+        user_id = self.table.item(selected_row, 0).text()
+        user_name = self.table.item(selected_row, 1).text()
+        user_email = self.table.item(selected_row, 2).text()
+        user_password = self.table.item(selected_row, 3).text()
+        user_role = self.table.item(selected_row, 4).text()
+
+        # Crea el formulario con los datos del usuario seleccionado
+        formulario = FormularioUsuario(user_id, user_name, user_email, user_password, user_role)
+        if formulario.exec_() == QDialog.Accepted:
+            # Después de editar el usuario, guarda los cambios en la base de datos
+            db = DBConnection()
+            db.connect()
+
+            # Cambia a acceso correcto de los valores del formulario
+            db.modificar_usuario(user_id, 
+                             formulario.nombre_input.text(),  # Aquí cambiamos user_name por nombre_input
+                             formulario.correo_input.text(),
+                             formulario.password_input.text(),
+                             formulario.role_combo.currentText())
+
+            db.close()
+            self.load_users()  # Recarga los usuarios en la tabla
 
     def delete_user(self):
-        """Placeholder para eliminar un usuario"""
-        print("Función de eliminar usuario no implementada.")
+        """Elimina el usuario seleccionado de la base de datos."""
+        selected_row = self.table.currentRow()
+        if selected_row < 0:
+            QMessageBox.warning(self, "Eliminar Usuario", "Por favor, selecciona un usuario para eliminar.")
+            return
+
+        confirm = QMessageBox.question(
+            self,
+            "Eliminar Usuario",
+            "¿Estás seguro de que deseas eliminar este usuario?",
+            QMessageBox.Yes | QMessageBox.No
+        )
+        if confirm == QMessageBox.No:
+            return
+
+        user_id = self.table.item(selected_row, 0).text()
+
+        db = DBConnection()
+        db.connect()
+        db.delete_usuario(user_id)
+        db.close()
+
+        QMessageBox.information(self, "Eliminar Usuario", "Usuario eliminado exitosamente.")
+        self.load_users()
