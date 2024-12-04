@@ -4,6 +4,7 @@ from conexion import DBConnection
 from Usuarios import UsuariosView
 from Proveedores import ProveedoresView
 from Productos import ProductosView
+from Tienda import TiendaView
 
 class TiendaMenu(QMainWindow):
     def __init__(self, usuario, login_window, parent=None):
@@ -23,7 +24,7 @@ class TiendaMenu(QMainWindow):
             self.nombre_usuario = "Usuario desconocido" 
 
         self.setWindowTitle("Menú Principal")
-        self.setGeometry(100, 100, 900, 600)
+        self.setGeometry(100, 100, 1200, 800)
         self.setStyleSheet("""
             background-color: #ecf0f1;
             font-family: 'Arial', sans-serif;
@@ -134,7 +135,9 @@ class TiendaMenu(QMainWindow):
         self.main_area.addWidget(proveedores_view)
 
     def show_tienda(self):
-        self.update_main_area("Gestión de Tienda")
+        self._clear_main_area()
+        tienda_view = TiendaView()
+        self.main_area.addWidget(tienda_view)
     
     def show_carrito(self):
         self.update_main_area("Carrito de Compras")
