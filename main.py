@@ -65,10 +65,10 @@ class Ui_MainWindow:
 
         MainWindow.setCentralWidget(self.centralwidget)
 
-        # Instancia de la conexión
+        
         self.db = DBConnection()
         try:
-            self.db.connect()  # Conexión a la base de datos
+            self.db.connect()  
         except Exception as e:
             QtWidgets.QMessageBox.critical(None, "Error", f"Error al conectar a la base de datos:\n{str(e)}")
             sys.exit()
@@ -84,22 +84,22 @@ class Ui_MainWindow:
             QtWidgets.QMessageBox.warning(None, "Advertencia", "Por favor ingrese correo y contraseña.")
             return
 
-        # Verificar credenciales usando la conexión
+       
         user = self.db.log(correo, contrasena)
         if user:
-            QtWidgets.QMessageBox.information(None, "Éxito", f"Bienvenido, {user[1]}!")  # Muestra el nombre del usuario.
+            QtWidgets.QMessageBox.information(None, "Éxito", f"Bienvenido, {user[1]}!")  
             self.clear_fields()
-            self.open_menu_window(correo)  # Abrir la ventana del menú principal.
+            self.open_menu_window(correo)  
         else:
             QtWidgets.QMessageBox.critical(None, "Error", "Correo o contraseña incorrectos.")
 
 
     def open_menu_window(self,correo):
         """Abrir la ventana del menú principal."""
-        from MenuA import TiendaMenu  # Importar correctamente TiendaMenu
-        self.menu_window = TiendaMenu(correo,MainWindow)  # Pasar la ventana de inicio de sesión
-        self.menu_window.show()  # Mostrar la ventana del menú
-        MainWindow.hide()  # Ocultar la ventana de inicio de sesión
+        from MenuA import TiendaMenu  
+        self.menu_window = TiendaMenu(correo,MainWindow)  
+        self.menu_window.show()  
+        MainWindow.hide()  
     def clear_fields(self):
             """Limpiar los campos de texto de la ventana principal."""
             self.TextUsuario.clear()
